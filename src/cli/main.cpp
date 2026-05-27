@@ -49,13 +49,24 @@ static std::vector<BackendInventory> enumerateAllBackends(const CliOptions &opts
 
 int main(int argc, char **argv)
 {
+    std::cerr << "[clpeak] Starting..." << std::endl;
+    std::cerr << "[clpeak] argc = " << argc << std::endl;
+    for (int i = 0; i < argc; i++) {
+        std::cerr << "[clpeak] argv[" << i << "] = " << argv[i] << std::endl;
+    }
+    std::cerr.flush();
+    
     CliOptions opts;
     parseCliOptions(argc, argv, opts);
 
     // --list-devices: print every backend's inventory.
     if (opts.listDevices)
     {
+        std::cerr << "[clpeak] --list-devices mode" << std::endl;
+        std::cerr.flush();
         auto invs = enumerateAllBackends(opts);
+        std::cerr << "[clpeak] enumerateAllBackends returned " << invs.size() << " backends" << std::endl;
+        std::cerr.flush();
         if (invs.empty())
         {
             std::cerr << "No OpenCL platforms or devices found.\n";
