@@ -3,6 +3,7 @@
 #include <common/options.h>
 #include <common/common.h>
 #include <cstring>
+#include <iostream>
 
 // Kernel strings live in cl_kernels.cpp — see clGetMainKernels(), etc.
 // Benchmark methods live in separate files:
@@ -317,10 +318,17 @@ BackendInventory clPeak::enumerate()
   BackendInventory inv;
   inv.backend = "OpenCL";
 
+  std::cerr << "[clpeak] clPeak::enumerate() called" << std::endl;
+  std::cerr.flush();
+
   try
   {
     std::vector<cl::Platform> platforms;
+    std::cerr << "[clpeak] Calling cl::Platform::get()" << std::endl;
+    std::cerr.flush();
     cl::Platform::get(&platforms);
+    std::cerr << "[clpeak] cl::Platform::get() returned, platforms.size() = " << platforms.size() << std::endl;
+    std::cerr.flush();
     inv.available = !platforms.empty();
 
     for (size_t p = 0; p < platforms.size(); p++)
