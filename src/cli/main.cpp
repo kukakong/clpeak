@@ -56,6 +56,15 @@ int main(int argc, char **argv)
     if (opts.listDevices)
     {
         auto invs = enumerateAllBackends(opts);
+        if (invs.empty())
+        {
+            std::cerr << "No OpenCL platforms or devices found.\n";
+            std::cerr << "Make sure your device has OpenCL support and libOpenCL.so is available.\n";
+            std::cerr << "On Android, OpenCL library is usually at:\n";
+            std::cerr << "  /system/vendor/lib64/libOpenCL.so (64-bit)\n";
+            std::cerr << "  /system/vendor/lib/libOpenCL.so (32-bit)\n";
+            return 1;
+        }
         for (const auto &inv : invs)
         {
 #ifdef ENABLE_OPENCL
@@ -88,6 +97,12 @@ int main(int argc, char **argv)
         clObj.log.reset(new LoggerCli(opts.compareFile));
         clObj.applyOptions(opts);
         clStatus = clObj.runAll();
+        if (clStatus != 0)
+        {
+            std::cerr << "OpenCL backend failed. Error code: " << clStatus << "\n";
+            std::cerr << "This usually means no OpenCL platforms or devices were found.\n";
+            std::cerr << "Make sure your device has OpenCL support.\n";
+        }
         mergeResults(combined, clObj.log->results);
     }
 #endif
