@@ -28,9 +28,17 @@ static void mergeResults(ResultStore &dst, const ResultStore &src)
 static std::vector<BackendInventory> enumerateAllBackends(const CliOptions &opts)
 {
     std::vector<BackendInventory> out;
+    std::cerr << "[clpeak] enumerateAllBackends: checking backends" << std::endl;
 #ifdef ENABLE_OPENCL
+    std::cerr << "[clpeak] ENABLE_OPENCL is defined" << std::endl;
     if (!opts.skipOpenCL)
+    {
+        std::cerr << "[clpeak] calling clPeak::enumerate()" << std::endl;
+        std::cerr.flush();
         out.push_back(clPeak::enumerate());
+    }
+#else
+    std::cerr << "[clpeak] ENABLE_OPENCL is NOT defined!" << std::endl;
 #endif
 #ifdef ENABLE_VULKAN
     if (!opts.skipVulkan)
